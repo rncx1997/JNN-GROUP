@@ -1,5 +1,5 @@
-const ADMIN_NUMBER = '6285190066408';
-const WHATSAPP_LINK = 'https://wa.me/6285190066408';
+const ADMIN_NUMBER = '6281256077844';
+const WHATSAPP_LINK = 'https://wa.me/6281256077844';
 
 const REGIONS = {
   'Bengkayang': ['Paum', 'Sejaro', 'Kindau', 'Take', 'Jagoi', 'Merendeng', 'Sebujit', 'Iyeng', 'Siding', 'Tangguh', 'Kapot', 'Badat', 'Piju', 'Nibong'],
@@ -42,7 +42,7 @@ function handleLogin() {
     return;
   }
 
-  if (cleanPhone === '6285190066408' && pass === 'jnn123') {
+  if (cleanPhone === '6281256077844' && pass === 'jnn123') {
     loginSuccess('Admin JNN GROUP');
   } else {
     loginSuccess(phone);
