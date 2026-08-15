@@ -86,9 +86,9 @@ const VOUCHERS_BY_REGION = {
   },
   'Sambas': {
     'harian': [
-      '3 Jam - Rp 3.000',
-      '6 Jam - Rp 6.000',
-      '24 Jam - Rp 10.000'
+      '2 Jam - Rp 1.000',
+      '4 Jam - Rp 2.000',
+      '8 Jam - Rp 4.000'
     ],
     'bulanan': [
       '30 Hari - Rp 50.000 (Kec. Sambas)'
