@@ -254,6 +254,25 @@
 
   <div id="toast" class="toast"></div>
 
+  <div id="chatWidget">
+    <button id="chatToggle" class="chat-toggle" onclick="toggleChat()">💬<span id="chatBadge" class="chat-badge" style="display:none">0</span></button>
+    <div id="chatPanel" class="chat-panel">
+      <div class="chat-header">
+        <div>
+          <strong>Live Chat JNN GROUP</strong>
+          <span id="chatStatus" class="chat-status">Menghubungkan...</span>
+        </div>
+        <button onclick="toggleChat()">✕</button>
+      </div>
+      <div id="chatMessages" class="chat-messages"></div>
+      <div class="chat-input">
+        <input id="chatText" type="text" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')sendChat()" maxlength="500">
+        <button onclick="sendChat()">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/mqtt@4.3.8/dist/mqtt.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

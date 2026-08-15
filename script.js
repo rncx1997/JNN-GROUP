@@ -182,6 +182,148 @@ function showToast(text) {
   setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+/* ===== LIVE CHAT ===== */
+const CHAT_TOPIC = 'jnn_group/livechat';
+const BROKER_URL = 'wss://broker.emqx.io:8084/mqtt';
+let mqttClient = null;
+let chatOpen = false;
+let unreadCount = 0;
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function getChatUser(silent) {
+  let user = localStorage.getItem('jnn_chat_user');
+  if (!user) {
+    if (!silent) {
+      user = prompt('Masukkan nama kamu untuk live chat:');
+    }
+    if (!user || !user.trim()) {
+      user = 'Tamu ' + Math.floor(Math.random() * 1000);
+    }
+    localStorage.setItem('jnn_chat_user', user.trim());
+  }
+  return user.trim();
+}
+
+function initChat() {
+  const status = document.getElementById('chatStatus');
+  if (typeof mqtt === 'undefined') {
+    status.textContent = 'Chat tidak tersedia';
+    return;
+  }
+
+  try {
+    mqttClient = mqtt.connect(BROKER_URL, {
+      clientId: 'jnn_web_' + Math.random().toString(16).substr(2, 8)
+    });
+  } catch (e) {
+    status.textContent = 'Gagal terhubung';
+    return;
+  }
+
+  mqttClient.on('connect', () => {
+    status.textContent = '● Online';
+    status.classList.add('online');
+    mqttClient.subscribe(CHAT_TOPIC);
+    const user = getChatUser(true);
+    publishChat({ user, text: ' masuk ke live chat', time: nowTime(), system: true });
+  });
+
+  mqttClient.on('message', (topic, payload) => {
+    try {
+      const msg = JSON.parse(payload.toString());
+      appendChatMessage(msg);
+    } catch (e) {}
+  });
+
+  mqttClient.on('close', () => {
+    status.textContent = '● Offline';
+    status.classList.remove('online');
+  });
+
+  mqttClient.on('error', () => {
+    status.textContent = 'Gagal terhubung';
+    status.classList.remove('online');
+  });
+}
+
+function nowTime() {
+  return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+}
+
+function publishChat(msg) {
+  if (mqttClient && mqttClient.connected) {
+    try {
+      mqttClient.publish(CHAT_TOPIC, JSON.stringify(msg));
+    } catch (e) {}
+  }
+}
+
+function appendChatMessage(msg) {
+  const wrap = document.getElementById('chatMessages');
+  const me = msg.user === getChatUser();
+
+  if (msg.system) {
+    const sys = document.createElement('div');
+    sys.className = 'chat-sys';
+    sys.textContent = msg.user + ' ' + msg.text + ' · ' + msg.time;
+    wrap.appendChild(sys);
+  } else {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + (me ? 'me' : 'them');
+    div.innerHTML =
+      '<span class="chat-user">' + escapeHtml(me ? 'Kamu' : msg.user) + '</span>' +
+      '<span>' + escapeHtml(msg.text) + '</span>' +
+      '<span class="chat-time">' + escapeHtml(msg.time) + '</span>';
+    wrap.appendChild(div);
+  }
+
+  wrap.scrollTop = wrap.scrollHeight;
+
+  if (!chatOpen) {
+    unreadCount++;
+    updateChatBadge();
+  }
+}
+
+function updateChatBadge() {
+  const badge = document.getElementById('chatBadge');
+  badge.textContent = unreadCount;
+  badge.style.display = unreadCount > 0 ? 'grid' : 'none';
+}
+
+function toggleChat() {
+  const panel = document.getElementById('chatPanel');
+  chatOpen = !chatOpen;
+  panel.classList.toggle('show', chatOpen);
+  if (chatOpen) {
+    unreadCount = 0;
+    updateChatBadge();
+    getChatUser();
+    document.getElementById('chatText').focus();
+  }
+}
+
+function sendChat() {
+  const input = document.getElementById('chatText');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const msg = { user: getChatUser(), text, time: nowTime(), system: false };
+  publishChat(msg);
+  appendChatMessage(msg);
+  input.value = '';
+}
+
+initChat();
+
+
 let slideIndex = 0;
 const slides = document.querySelectorAll('.billboard-slide');
 const dots = document.querySelectorAll('.dot');
