@@ -1,7 +1,14 @@
 const ADMIN_NUMBER = '6285190066408';
 const WHATSAPP_LINK = 'https://wa.me/6285190066408';
 
+const REGIONS = {
+  'Bengkayang': ['Paum', 'Sejaro', 'Kindau', 'Take', 'Jagoi', 'Merendeng', 'Sebujit', 'Iyeng', 'Siding', 'Tangguh', 'Kapot', 'Badat', 'Piju', 'Nibong'],
+  'Sambas': ['Seradi'],
+  'Singkawang': ['Samelagi Kecil']
+};
+
 let currentUser = null;
+let buyingPaket = null;
 
 function formatPhone(el) {
   const val = el.value.replace(/[^0-9+]/g, '');
@@ -67,13 +74,56 @@ function logout() {
 }
 
 function buy(paket, harga) {
+  buyingPaket = { paket, harga };
+  document.getElementById('buyTitle').textContent = 'Beli Voucher ' + paket;
+  document.getElementById('buyInfo').textContent = 'Paket ' + paket + ' - ' + harga;
+  document.getElementById('buyNote').textContent = '';
+  document.getElementById('buyKecamatan').value = '';
+  const desa = document.getElementById('buyDesa');
+  desa.innerHTML = '<option value="">-- Pilih Kecamatan dulu --</option>';
+  document.getElementById('buyModal').classList.add('show');
+}
+
+function closeBuy() {
+  document.getElementById('buyModal').classList.remove('show');
+}
+
+function updateDesa(scope) {
+  const kecSelect = document.getElementById(scope === 'buy' ? 'buyKecamatan' : 'regKecamatan');
+  const desaSelect = document.getElementById(scope === 'buy' ? 'buyDesa' : 'regDesa');
+  const villages = REGIONS[kecSelect.value] || [];
+
+  desaSelect.innerHTML = villages.length
+    ? '<option value="">-- Pilih Desa --</option>' +
+      villages.map((d) => '<option value="' + d + '">' + d + '</option>').join('')
+    : '<option value="">-- Pilih Kecamatan dulu --</option>';
+}
+
+function confirmBuy() {
+  const kecamatan = document.getElementById('buyKecamatan').value;
+  const desa = document.getElementById('buyDesa').value;
+  const note = document.getElementById('buyNote');
+
+  if (!kecamatan || !desa) {
+    note.textContent = 'Silakan pilih kecamatan dan desa terlebih dahulu.';
+    note.className = 'modal-note err';
+    return;
+  }
+
   const msg = encodeURIComponent(
     'Halo JNN GROUP, saya ingin membeli voucher WiFi.\n' +
-    'Paket: ' + paket + '\n' +
-    'Harga: ' + harga + '\n\n' +
+    'Paket: ' + buyingPaket.paket + '\n' +
+    'Harga: ' + buyingPaket.harga + '\n' +
+    'Kecamatan: ' + kecamatan + '\n' +
+    'Desa: ' + desa + '\n\n' +
     'Mohon info cara pembayaran dan aktivasi. Terima kasih.'
   );
+
+  note.textContent = 'Membuka WhatsApp...';
+  note.className = 'modal-note ok';
+
   window.open(WHATSAPP_LINK + '?text=' + msg, '_blank');
+  setTimeout(() => closeBuy(), 800);
 }
 
 function registerWifi(e) {
@@ -81,6 +131,8 @@ function registerWifi(e) {
   const nama = document.getElementById('nama').value.trim();
   const phone = document.getElementById('phone').value.trim();
   const alamat = document.getElementById('alamat').value.trim();
+  const kecamatan = document.getElementById('regKecamatan').value;
+  const desa = document.getElementById('regDesa').value;
   const paket = document.getElementById('paketDaftar').value;
   const msg = document.getElementById('formMsg');
 
@@ -92,11 +144,19 @@ function registerWifi(e) {
     return;
   }
 
+  if (!kecamatan || !desa) {
+    msg.textContent = 'Silakan pilih kecamatan dan desa terlebih dahulu.';
+    msg.className = 'form-note err';
+    return;
+  }
+
   const text = encodeURIComponent(
     'Halo JNN GROUP, saya ingin mendaftar WiFi.\n\n' +
     'Nama: ' + nama + '\n' +
     'No HP: ' + phone + '\n' +
     'Alamat: ' + (alamat || '-') + '\n' +
+    'Kecamatan: ' + kecamatan + '\n' +
+    'Desa: ' + desa + '\n' +
     'Paket: ' + paket + '\n\n' +
     'Mohon info proses aktivasi. Terima kasih.'
   );
@@ -142,8 +202,13 @@ document.getElementById('loginModal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) toggleLogin();
 });
 
+document.getElementById('buyModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeBuy();
+});
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     document.getElementById('loginModal').classList.remove('show');
+    document.getElementById('buyModal').classList.remove('show');
   }
 });

@@ -42,6 +42,31 @@
     </div>
   </div>
 
+  <div id="buyModal" class="modal">
+    <div class="modal-box">
+      <span class="modal-close" onclick="closeBuy()">&times;</span>
+      <h2 id="buyTitle">Beli Voucher</h2>
+      <p class="modal-note" id="buyInfo"></p>
+      <div class="form-group">
+        <label for="buyKecamatan">Kecamatan / Daerah</label>
+        <select id="buyKecamatan" onchange="updateDesa('buy')">
+          <option value="">-- Pilih Kecamatan --</option>
+          <option value="Bengkayang">Bengkayang</option>
+          <option value="Sambas">Sambas</option>
+          <option value="Singkawang">Singkawang</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="buyDesa">Desa</label>
+        <select id="buyDesa">
+          <option value="">-- Pilih Kecamatan dulu --</option>
+        </select>
+      </div>
+      <button class="btn-primary btn-block" onclick="confirmBuy()">Beli via WhatsApp</button>
+      <p class="modal-note" id="buyNote"></p>
+    </div>
+  </div>
+
   <section id="home" class="billboard">
     <div class="billboard-slide active" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 400%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%230e7bd8%22/><stop offset=%22100%25%22 stop-color=%22%2376c7ff%22/></linearGradient></defs><rect width=%221200%22 height=%22400%22 fill=%22url(%23g)%22/><circle cx=%221050%22 cy=%22100%22 r=%22120%22 fill=%22rgba(255,255,255,0.15)%22/><circle cx=%22100%22 cy=%22320%22 r=%22100%22 fill=%22rgba(255,255,255,0.15)%22/><circle cx=%22550%22 cy=%2230%22 r=%2280%22 fill=%22rgba(255,255,255,0.1)%22/></svg>')">
       <div class="billboard-content">
@@ -150,6 +175,23 @@
         <div class="form-group">
           <label for="alamat">Alamat</label>
           <input type="text" id="alamat" placeholder="Alamat pemasangan WiFi">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regKecamatan">Kecamatan / Daerah</label>
+            <select id="regKecamatan" onchange="updateDesa('reg')">
+              <option value="">-- Pilih Kecamatan --</option>
+              <option value="Bengkayang">Bengkayang</option>
+              <option value="Sambas">Sambas</option>
+              <option value="Singkawang">Singkawang</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regDesa">Desa</label>
+            <select id="regDesa">
+              <option value="">-- Pilih Kecamatan dulu --</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
           <label for="paketDaftar">Pilih Paket</label>

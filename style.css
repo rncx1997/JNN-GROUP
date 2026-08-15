@@ -233,6 +233,30 @@ body {
 .modal-note.ok { color: #1fa55c; }
 .modal-note.err { color: #e04545; }
 
+#buyInfo {
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--primary-light);
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 15px;
+}
+
+.modal-box .form-group select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 2px solid var(--primary-soft);
+  border-radius: 10px;
+  font-size: 15px;
+  background: var(--white);
+}
+
+.modal-box .form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 /* ===== BILLBOARD ===== */
 .billboard {
   position: relative;
@@ -494,6 +518,12 @@ body {
   margin-bottom: 18px;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
 .form-group label {
   display: block;
   font-weight: 600;
@@ -641,6 +671,8 @@ body {
 
 @media (max-width: 560px) {
   .price-grid { grid-template-columns: 1fr; }
+
+  .form-row { grid-template-columns: 1fr; }
 
   .billboard { height: 360px; }
 
