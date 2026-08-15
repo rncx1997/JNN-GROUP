@@ -73,11 +73,50 @@ function logout() {
   showToast('Anda telah keluar.');
 }
 
-function buy(paket, harga) {
-  buyingPaket = { paket, harga };
-  document.getElementById('buyTitle').textContent = 'Beli Voucher ' + paket;
-  document.getElementById('buyInfo').textContent = 'Paket ' + paket + ' - ' + harga;
+const VOUCHERS_BY_REGION = {
+  'Bengkayang': {
+    'harian': [
+      '3 Jam - Rp 3.000',
+      '6 Jam - Rp 6.000',
+      '24 Jam - Rp 10.000'
+    ],
+    'bulanan': [
+      '30 Hari - Rp 75.000 (Kec. Bengkayang)'
+    ]
+  },
+  'Sambas': {
+    'harian': [
+      '3 Jam - Rp 3.000',
+      '6 Jam - Rp 6.000',
+      '24 Jam - Rp 10.000'
+    ],
+    'bulanan': [
+      '30 Hari - Rp 50.000 (Kec. Sambas)'
+    ]
+  },
+  'Singkawang': {
+    'harian': [
+      '3 Jam - Rp 3.000',
+      '6 Jam - Rp 6.000',
+      '24 Jam - Rp 10.000'
+    ],
+    'bulanan': [
+      '30 Hari - Rp 50.000 (Kec. Singkawang)'
+    ]
+  }
+};
+
+function buy(type) {
+  buyingPaket = { type };
+  const typeLabel = type === 'harian' ? 'Voucher Harian' : 'Voucher Bulanan';
+  document.getElementById('buyTitle').textContent = 'Pilih ' + typeLabel;
+  document.getElementById('buyInfo').textContent =
+    'Silakan pilih kecamatan dan desa terlebih dahulu untuk melihat harga voucher ' + typeLabel + '.';
   document.getElementById('buyNote').textContent = '';
+
+  document.getElementById('hargaGroup').style.display = 'none';
+  document.getElementById('buyHarga').innerHTML = '<option value="">-- Pilih Harga --</option>';
+
   document.getElementById('buyKecamatan').value = '';
   const desa = document.getElementById('buyDesa');
   desa.innerHTML = '<option value="">-- Pilih Kecamatan dulu --</option>';
@@ -97,12 +136,44 @@ function updateDesa(scope) {
     ? '<option value="">-- Pilih Desa --</option>' +
       villages.map((d) => '<option value="' + d + '">' + d + '</option>').join('')
     : '<option value="">-- Pilih Kecamatan dulu --</option>';
+
+  if (scope === 'buy') {
+    hideHargaIfIncomplete();
+  }
+}
+
+function onBuyDesaChange() {
+  hideHargaIfIncomplete();
+}
+
+function hideHargaIfIncomplete() {
+  const kecamatan = document.getElementById('buyKecamatan').value;
+  const desa = document.getElementById('buyDesa').value;
+  const hargaGroup = document.getElementById('hargaGroup');
+  const hargaSelect = document.getElementById('buyHarga');
+
+  if (!kecamatan || !desa || !buyingPaket) {
+    hargaGroup.style.display = 'none';
+    return;
+  }
+
+  const options = VOUCHERS_BY_REGION[kecamatan][buyingPaket.type];
+  hargaSelect.innerHTML = '<option value="">-- Pilih Harga --</option>' +
+    options.map((v) => '<option value="' + v + '">' + v + '</option>').join('');
+  hargaGroup.style.display = 'block';
 }
 
 function confirmBuy() {
+  const harga = document.getElementById('buyHarga').value;
   const kecamatan = document.getElementById('buyKecamatan').value;
   const desa = document.getElementById('buyDesa').value;
   const note = document.getElementById('buyNote');
+
+  if (!harga) {
+    note.textContent = 'Silakan pilih harga voucher terlebih dahulu.';
+    note.className = 'modal-note err';
+    return;
+  }
 
   if (!kecamatan || !desa) {
     note.textContent = 'Silakan pilih kecamatan dan desa terlebih dahulu.';
@@ -112,8 +183,8 @@ function confirmBuy() {
 
   const msg = encodeURIComponent(
     'Halo JNN GROUP, saya ingin membeli voucher WiFi.\n' +
-    'Paket: ' + buyingPaket.paket + '\n' +
-    'Harga: ' + buyingPaket.harga + '\n' +
+    'Jenis: ' + (buyingPaket.type === 'harian' ? 'Voucher Harian' : 'Voucher Bulanan') + '\n' +
+    'Paket: ' + harga + '\n' +
     'Kecamatan: ' + kecamatan + '\n' +
     'Desa: ' + desa + '\n\n' +
     'Mohon info cara pembayaran dan aktivasi. Terima kasih.'
