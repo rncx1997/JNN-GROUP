@@ -69,6 +69,29 @@
     </div>
   </div>
 
+  <div id="confirmModal" class="modal">
+    <div class="modal-box">
+      <span class="modal-close" onclick="closeConfirm()">&times;</span>
+      <h2>Konfirmasi Pembelian</h2>
+      <div class="confirm-summary">
+        <div class="confirm-row">
+          <span>Voucher</span>
+          <strong id="confSisa"></strong>
+        </div>
+        <div class="confirm-row">
+          <span>Kecamatan</span>
+          <strong id="confKecamatan"></strong>
+        </div>
+        <div class="confirm-row">
+          <span>Desa</span>
+          <strong id="confDesa"></strong>
+        </div>
+      </div>
+      <button class="btn-primary btn-block" onclick="openWhatsApp()">KONFIRMASI</button>
+      <button class="btn-ghost btn-block" onclick="closeConfirm()">Batal</button>
+    </div>
+  </div>
+
   <section id="home" class="billboard">
     <div class="billboard-slide active" style="background-image: url('image/fotosampul1.png')"></div>
     <div class="billboard-slide" style="background-image: url('image/fotosampul2.png')"></div>

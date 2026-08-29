@@ -195,6 +195,22 @@ function confirmBuy() {
     return;
   }
 
+  document.getElementById('confSisa').textContent =
+    (buyingPaket.type === 'harian' ? 'Voucher Harian' : 'Voucher Bulanan') + ' - ' + harga;
+  document.getElementById('confKecamatan').textContent = kecamatan;
+  document.getElementById('confDesa').textContent = desa;
+  document.getElementById('confirmModal').classList.add('show');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+function openWhatsApp() {
+  const harga = document.getElementById('buyHarga').value;
+  const kecamatan = document.getElementById('buyKecamatan').value;
+  const desa = document.getElementById('buyDesa').value;
+
   const msg = encodeURIComponent(
     'Halo JNN GROUP, saya ingin membeli voucher WiFi.\n' +
     'Jenis: ' + (buyingPaket.type === 'harian' ? 'Voucher Harian' : 'Voucher Bulanan') + '\n' +
@@ -204,11 +220,9 @@ function confirmBuy() {
     'Mohon info cara pembayaran dan aktivasi. Terima kasih.'
   );
 
-  note.textContent = 'Membuka WhatsApp...';
-  note.className = 'modal-note ok';
-
   window.open(WHATSAPP_LINK + '?text=' + msg, '_blank');
-  setTimeout(() => closeBuy(), 800);
+  closeConfirm();
+  closeBuy();
 }
 
 function showToast(text) {
@@ -452,9 +466,14 @@ document.getElementById('buyModal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) closeBuy();
 });
 
+document.getElementById('confirmModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeConfirm();
+});
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     document.getElementById('loginModal').classList.remove('show');
     document.getElementById('buyModal').classList.remove('show');
+    closeConfirm();
   }
 });
