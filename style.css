@@ -117,6 +117,10 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+.d-label-short {
+  display: none;
+}
+
 .btn-daftar:hover {
   background: var(--primary);
   color: var(--white);
@@ -912,6 +916,13 @@ body {
     padding: 7px 12px;
     font-size: 12px;
   }
+
+  .d-label-full { display: none; }
+  .d-label-short { display: inline; }
+
+  .logo-img {
+    height: 40px;
+  }
 }
 
 @media (max-width: 520px) {
@@ -921,7 +932,7 @@ body {
   }
 
   .logo-img {
-    height: 56px;
+    height: 40px;
   }
 
   .logo strong {
