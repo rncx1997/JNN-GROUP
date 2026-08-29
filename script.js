@@ -3,7 +3,7 @@ const WHATSAPP_LINK = 'https://wa.me/6281256077844';
 
 const REGIONS = {
   'Bengkayang': ['Paum', 'Sejaro', 'Kindau', 'Take', 'Jagoi', 'Merendeng', 'Sebujit', 'Iyeng', 'Siding', 'Tangguh', 'Kapot', 'Badat', 'Piju', 'Nibong'],
-  'Sambas': ['Seradi'],
+  'Sambas': ['Seradi', 'Samping'],
   'Singkawang': ['Samelagi Kecil']
 };
 
@@ -112,6 +112,16 @@ const VOUCHERS_BY_DESA = {
       '1 Jam - Rp 2.000',
       '3 Jam - Rp 5.000',
       '5 Jam - Rp 8.000'
+    ]
+  },
+  'Samping': {
+    'harian': [
+      '2 Jam - Rp 1.000',
+      '4 Jam - Rp 2.000',
+      '24 Jam - Rp 10.000'
+    ],
+    'bulanan': [
+      '30 Hari - Rp 50.000 (Kec. Sambas)'
     ]
   }
 };
