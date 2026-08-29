@@ -469,7 +469,8 @@ body {
 }
 
 .price-card.big .price {
-  font-size: 34px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .price-card.big li {
