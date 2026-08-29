@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Pemasangan WiFi - JNN GROUP</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .daftar-page {
+      max-width: 520px;
+      margin: 48px auto;
+      padding: 0 20px;
+    }
+
+    .daftar-card {
+      background: var(--white);
+      border: 1px solid var(--primary-soft);
+      border-radius: 20px;
+      padding: 36px 30px;
+      box-shadow: 0 14px 40px rgba(14, 123, 216, 0.12);
+    }
+
+    .daftar-card h1 {
+      color: var(--dark);
+      font-size: 24px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .daftar-card .sub {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      text-align: center;
+    }
+
+    .nav a.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">📡</span>
+        <div>
+          <strong>JNN GROUP</strong>
+          <small>WiFi Voucher Internet</small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#harga">Daftar Harga</a>
+        <a href="#" class="active">Daftar Pemasangan WiFi</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="daftar-page">
+    <div class="daftar-card">
+      <h1>Daftar Pemasangan WiFi</h1>
+      <p class="sub">Isi data di bawah, lalu klik DAFTAR untuk dikirim ke tim JNN GROUP.</p>
+
+      <form id="formDaftar">
+        <div class="form-group">
+          <label for="dNama">Nama Lengkap</label>
+          <input type="text" id="dNama" placeholder="Nama kamu" required>
+        </div>
+        <div class="form-group">
+          <label for="dPhone">Nomor HP</label>
+          <input type="tel" id="dPhone" placeholder="08xxxxxxxxxx" required oninput="this.value = this.value.replace(/[^0-9+]/g, '')">
+        </div>
+        <div class="form-group">
+          <label for="dKecamatan">Kecamatan</label>
+          <input type="text" id="dKecamatan" placeholder="Contoh: Bengkayang" required>
+        </div>
+        <div class="form-group">
+          <label for="dDesa">Desa</label>
+          <input type="text" id="dDesa" placeholder="Contoh: Badat" required>
+        </div>
+        <button type="button" class="btn-primary btn-block" onclick="daftar()">DAFTAR</button>
+        <p class="form-note" id="dNote"></p>
+      </form>
+
+      <a class="back-link" href="index.html">&larr; Kembali ke Beranda</a>
+    </div>
+  </main>
+
+  <script>
+    const WHATSAPP_LINK = 'https://wa.me/6281256077844';
+
+    function daftar() {
+      const nama = document.getElementById('dNama').value.trim();
+      const phone = document.getElementById('dPhone').value.trim();
+      const kecamatan = document.getElementById('dKecamatan').value;
+      const desa = document.getElementById('dDesa').value;
+      const note = document.getElementById('dNote');
+
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+
+      if (!nama) {
+        note.textContent = 'Nama lengkap wajib diisi.';
+        note.className = 'form-note err';
+        return;
+      }
+
+      if (cleanPhone.length < 9) {
+        note.textContent = 'Nomor HP tidak valid. Periksa kembali.';
+        note.className = 'form-note err';
+        return;
+      }
+
+      if (!kecamatan || !desa) {
+        note.textContent = 'Kecamatan dan desa wajib diisi.';
+        note.className = 'form-note err';
+        return;
+      }
+
+      const text = encodeURIComponent(
+        'Halo JNN GROUP, saya ingin daftar pemasangan WiFi.\n\n' +
+        'Nama: ' + nama + '\n' +
+        'No HP: ' + phone + '\n' +
+        'Kecamatan: ' + kecamatan + '\n' +
+        'Desa: ' + desa + '\n\n' +
+        'Mohon info proses aktivasi. Terima kasih.'
+      );
+
+      note.textContent = 'Membuka WhatsApp...';
+      note.className = 'form-note ok';
+      window.open(WHATSAPP_LINK + '?text=' + text, '_blank');
+    }
+  </script>
+</body>
+</html>

@@ -20,9 +20,9 @@
       <nav class="nav">
         <a href="#home">Beranda</a>
         <a href="#harga">Daftar Harga</a>
-        <a href="#daftar">Daftar WiFi</a>
         <a href="#tentang">Tentang</a>
       </nav>
+      <a class="btn-daftar" href="daftar.html" target="_blank">Daftar Pemasangan WiFi</a>
       <div class="profile-area">
         <button id="loginBtn" class="btn-login" onclick="toggleLogin()">
           <span>👤</span> Masuk
@@ -49,7 +49,7 @@
       <p class="modal-note" id="buyInfo"></p>
       <div class="form-group">
         <label for="buyKecamatan">Kecamatan / Daerah</label>
-        <select id="buyKecamatan" onchange="updateDesa('buy')">
+        <select id="buyKecamatan" onchange="updateDesa()">
           <option value="">-- Pilih Kecamatan --</option>
           <option value="Bengkayang">Bengkayang</option>
           <option value="Sambas">Sambas</option>
@@ -74,30 +74,9 @@
   </div>
 
   <section id="home" class="billboard">
-    <div class="billboard-slide active" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 400%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%230e7bd8%22/><stop offset=%22100%25%22 stop-color=%22%2376c7ff%22/></linearGradient></defs><rect width=%221200%22 height=%22400%22 fill=%22url(%23g)%22/><circle cx=%221050%22 cy=%22100%22 r=%22120%22 fill=%22rgba(255,255,255,0.15)%22/><circle cx=%22100%22 cy=%22320%22 r=%22100%22 fill=%22rgba(255,255,255,0.15)%22/><circle cx=%22550%22 cy=%2230%22 r=%2280%22 fill=%22rgba(255,255,255,0.1)%22/></svg>')">
-      <div class="billboard-content">
-        <span class="billboard-tag">JNN GROUP</span>
-        <h1>Internet Cepat,<br>Harga Bersahabat</h1>
-        <p>Voucher WiFi murah mulai Rp 3.000 untuk 3 Jam. Nikmati internet tanpa batas dari JNN GROUP.</p>
-        <a href="#harga" class="btn-primary">Lihat Daftar Harga</a>
-      </div>
-    </div>
-    <div class="billboard-slide" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 400%22><defs><linearGradient id=%22g%22 x1=%221%22 y1=%220%22 x2=%220%22 y2=%221%22><stop offset=%220%25%22 stop-color=%22%2328a4f5%22/><stop offset=%22100%25%22 stop-color=%22%23e6f6ff%22/></linearGradient></defs><rect width=%221200%22 height=%22400%22 fill=%22url(%23g)%22/><circle cx=%22200%22 cy=%22120%22 r=%22150%22 fill=%22rgba(255,255,255,0.2)%22/><circle cx=%221000%22 cy=%22300%22 r=%22120%22 fill=%22rgba(255,255,255,0.2)%22/></svg>')">
-      <div class="billboard-content">
-        <span class="billboard-tag">PROMO SPESIAL</span>
-        <h1>Paket Bulanan<br>Rp 75.000 / 30 Hari</h1>
-        <p>Bebas internet sebulan penuh tanpa batas kuota. Paket paling hemat untuk keluarga.</p>
-        <a href="#harga" class="btn-primary">Cek Promo</a>
-      </div>
-    </div>
-    <div class="billboard-slide" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 400%22><defs><linearGradient id=%22g%22 x1=%220%22 y1=%221%22 x2=%221%22 y2=%220%22><stop offset=%220%25%22 stop-color=%22%235ab9f0%22/><stop offset=%22100%25%22 stop-color=%22%23ffffff%22/></linearGradient></defs><rect width=%221200%22 height=%22400%22 fill=%22url(%23g)%22/><circle cx=%22550%22 cy=%22350%22 r=%22130%22 fill=%22rgba(255,255,255,0.25)%22/></svg>')">
-      <div class="billboard-content">
-        <span class="billboard-tag">JNN GROUP</span>
-        <h1>Daftar WiFi Mudah<br>Langsung dari HP</h1>
-        <p>Isi nomor HP kamu, tim kami siap membantu pendaftaran WiFi dengan cepat.</p>
-        <a href="#daftar" class="btn-primary">Daftar Sekarang</a>
-      </div>
-    </div>
+    <div class="billboard-slide active" style="background-image: url('image/fotosampul1.png')"></div>
+    <div class="billboard-slide" style="background-image: url('image/fotosampul2.png')"></div>
+    <div class="billboard-slide" style="background-image: url('image/fotosampul2.png')"></div>
     <div class="billboard-dots">
       <span class="dot active"></span>
       <span class="dot"></span>
@@ -141,54 +120,6 @@
       </div>
     </section>
 
-    <section id="daftar" class="section section-light">
-      <h2 class="section-title">Daftar WiFi</h2>
-      <p class="section-sub">Masukkan nomor HP kamu, kami akan menghubungimu untuk aktivasi WiFi</p>
-      <form class="register-form" onsubmit="return registerWifi(event)">
-        <div class="form-group">
-          <label for="nama">Nama Lengkap</label>
-          <input type="text" id="nama" placeholder="Nama kamu" required>
-        </div>
-        <div class="form-group">
-          <label for="phone">Nomor HP</label>
-          <input type="tel" id="phone" placeholder="08xxxxxxxxxx" required>
-        </div>
-        <div class="form-group">
-          <label for="alamat">Alamat</label>
-          <input type="text" id="alamat" placeholder="Alamat pemasangan WiFi">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="regKecamatan">Kecamatan / Daerah</label>
-            <select id="regKecamatan" onchange="updateDesa('reg')">
-              <option value="">-- Pilih Kecamatan --</option>
-              <option value="Bengkayang">Bengkayang</option>
-              <option value="Sambas">Sambas</option>
-              <option value="Singkawang">Singkawang</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="regDesa">Desa</label>
-            <select id="regDesa">
-              <option value="">-- Pilih Kecamatan dulu --</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="paketDaftar">Pilih Paket</label>
-          <select id="paketDaftar">
-            <option value="3 Jam - Rp 3.000">3 Jam - Rp 3.000</option>
-            <option value="6 Jam - Rp 6.000">6 Jam - Rp 6.000</option>
-            <option value="24 Jam - Rp 10.000">24 Jam - Rp 10.000</option>
-            <option value="30 Hari - Rp 75.000 (Bengkayang)">30 Hari - Rp 75.000 (Bengkayang)</option>
-            <option value="30 Hari - Rp 50.000 (Sambas/Singkawang)">30 Hari - Rp 50.000 (Sambas/Singkawang)</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary btn-block">Daftar Sekarang</button>
-        <p class="form-note" id="formMsg"></p>
-      </form>
-    </section>
-
     <section id="tentang" class="section">
       <h2 class="section-title">Tentang JNN GROUP</h2>
       <p class="section-sub">Mitra internet terpercaya untuk kebutuhanmu</p>
@@ -227,7 +158,7 @@
         <p>
           <a href="#home">Beranda</a><br>
           <a href="#harga">Daftar Harga</a><br>
-          <a href="#daftar">Daftar WiFi</a>
+          <a href="daftar.html" target="_blank">Daftar Pemasangan WiFi</a>
         </p>
       </div>
     </div>

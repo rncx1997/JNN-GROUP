@@ -106,6 +106,22 @@ const VOUCHERS_BY_REGION = {
   }
 };
 
+const VOUCHERS_BY_DESA = {
+  'Badat': {
+    'harian': [
+      '1 Jam - Rp 2.000',
+      '3 Jam - Rp 5.000',
+      '5 Jam - Rp 8.000'
+    ]
+  }
+};
+
+function getVoucherOptions(kecamatan, desa, type) {
+  const byDesa = (VOUCHERS_BY_DESA[desa] || {})[type];
+  if (byDesa) return byDesa;
+  return VOUCHERS_BY_REGION[kecamatan][type];
+}
+
 function buy(type) {
   buyingPaket = { type };
   const typeLabel = type === 'harian' ? 'Voucher Harian' : 'Voucher Bulanan';
@@ -127,9 +143,9 @@ function closeBuy() {
   document.getElementById('buyModal').classList.remove('show');
 }
 
-function updateDesa(scope) {
-  const kecSelect = document.getElementById(scope === 'buy' ? 'buyKecamatan' : 'regKecamatan');
-  const desaSelect = document.getElementById(scope === 'buy' ? 'buyDesa' : 'regDesa');
+function updateDesa() {
+  const kecSelect = document.getElementById('buyKecamatan');
+  const desaSelect = document.getElementById('buyDesa');
   const villages = REGIONS[kecSelect.value] || [];
 
   desaSelect.innerHTML = villages.length
@@ -137,9 +153,7 @@ function updateDesa(scope) {
       villages.map((d) => '<option value="' + d + '">' + d + '</option>').join('')
     : '<option value="">-- Pilih Kecamatan dulu --</option>';
 
-  if (scope === 'buy') {
-    hideHargaIfIncomplete();
-  }
+  hideHargaIfIncomplete();
 }
 
 function onBuyDesaChange() {
@@ -157,7 +171,7 @@ function hideHargaIfIncomplete() {
     return;
   }
 
-  const options = VOUCHERS_BY_REGION[kecamatan][buyingPaket.type];
+  const options = getVoucherOptions(kecamatan, desa, buyingPaket.type);
   hargaSelect.innerHTML = '<option value="">-- Pilih Harga --</option>' +
     options.map((v) => '<option value="' + v + '">' + v + '</option>').join('');
   hargaGroup.style.display = 'block';
@@ -195,55 +209,6 @@ function confirmBuy() {
 
   window.open(WHATSAPP_LINK + '?text=' + msg, '_blank');
   setTimeout(() => closeBuy(), 800);
-}
-
-function registerWifi(e) {
-  e.preventDefault();
-  const nama = document.getElementById('nama').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const alamat = document.getElementById('alamat').value.trim();
-  const kecamatan = document.getElementById('regKecamatan').value;
-  const desa = document.getElementById('regDesa').value;
-  const paket = document.getElementById('paketDaftar').value;
-  const msg = document.getElementById('formMsg');
-
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
-
-  if (cleanPhone.length < 9) {
-    msg.textContent = 'Nomor HP tidak valid. Periksa kembali.';
-    msg.className = 'form-note err';
-    return;
-  }
-
-  if (!kecamatan || !desa) {
-    msg.textContent = 'Silakan pilih kecamatan dan desa terlebih dahulu.';
-    msg.className = 'form-note err';
-    return;
-  }
-
-  const text = encodeURIComponent(
-    'Halo JNN GROUP, saya ingin mendaftar WiFi.\n\n' +
-    'Nama: ' + nama + '\n' +
-    'No HP: ' + phone + '\n' +
-    'Alamat: ' + (alamat || '-') + '\n' +
-    'Kecamatan: ' + kecamatan + '\n' +
-    'Desa: ' + desa + '\n' +
-    'Paket: ' + paket + '\n\n' +
-    'Mohon info proses aktivasi. Terima kasih.'
-  );
-
-  msg.textContent = 'Mengirim data ke WhatsApp...';
-  msg.className = 'form-note ok';
-
-  window.open(WHATSAPP_LINK + '?text=' + text, '_blank');
-
-  setTimeout(() => {
-    msg.textContent = 'Pendaftaran terkirim! Tim JNN GROUP akan segera menghubungi ' + phone + '.';
-    msg.className = 'form-note ok';
-    e.target.reset();
-  }, 1000);
-
-  return false;
 }
 
 function showToast(text) {

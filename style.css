@@ -118,6 +118,25 @@ body {
   box-shadow: 0 6px 16px rgba(14, 123, 216, 0.4);
 }
 
+.btn-daftar {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 9px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-daftar:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
 .profile-chip {
   display: flex;
   align-items: center;
@@ -372,16 +391,6 @@ body {
   padding: 70px 20px;
 }
 
-.section-light {
-  max-width: none;
-  background: linear-gradient(180deg, var(--primary-light), #f5fbff);
-}
-
-.section-light .section-sub,
-.section-light .section-title {
-  text-align: center;
-}
-
 .section-title {
   color: var(--dark);
   font-size: 32px;
@@ -549,17 +558,7 @@ body {
   color: var(--white);
 }
 
-/* ===== REGISTER ===== */
-.register-form {
-  max-width: 480px;
-  margin: 0 auto;
-  background: var(--white);
-  border-radius: 20px;
-  padding: 34px;
-  box-shadow: 0 14px 40px rgba(14, 123, 216, 0.12);
-  border: 1px solid var(--primary-soft);
-}
-
+/* ===== FORM ===== */
 .form-group {
   margin-bottom: 18px;
 }
@@ -919,4 +918,9 @@ body {
   .logo small { display: none; }
 
   .btn-login span { display: none; }
+
+  .btn-daftar {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
 }
