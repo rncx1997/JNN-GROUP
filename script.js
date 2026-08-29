@@ -221,6 +221,9 @@ function showToast(text) {
 /* ===== LIVE CHAT ===== */
 const CHAT_TOPIC = 'jnn_group/livechat';
 const BROKER_URL = 'wss://broker.emqx.io:8084/mqtt';
+const CHAT_STORAGE_KEY = 'jnn_chat_history';
+const CHAT_TTL = 24 * 60 * 60 * 1000;
+const CHAT_MAX_STORED = 200;
 let mqttClient = null;
 let chatOpen = false;
 let unreadCount = 0;
@@ -247,6 +250,41 @@ function getChatUser(silent) {
   return user.trim();
 }
 
+function loadChatHistory() {
+  try {
+    const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    const now = Date.now();
+    const fresh = (Array.isArray(list) ? list : [])
+      .filter((m) => m && m.ts && now - m.ts < CHAT_TTL);
+    saveChatHistory(fresh);
+    return fresh;
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveChatHistory(list) {
+  try {
+    const now = Date.now();
+    const fresh = list
+      .filter((m) => m && m.ts && now - m.ts < CHAT_TTL)
+      .slice(-CHAT_MAX_STORED);
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(fresh));
+  } catch (e) {}
+}
+
+function purgeExpiredChat() {
+  loadChatHistory();
+}
+
+function renderChatHistory() {
+  const history = loadChatHistory();
+  const wrap = document.getElementById('chatMessages');
+  wrap.innerHTML = '';
+  history.forEach((m) => renderChatMessage(m, false));
+}
+
 function initChat() {
   const status = document.getElementById('chatStatus');
   if (typeof mqtt === 'undefined') {
@@ -267,6 +305,7 @@ function initChat() {
     status.textContent = '● Online';
     status.classList.add('online');
     mqttClient.subscribe(CHAT_TOPIC);
+    renderChatHistory();
     const user = getChatUser(true);
     publishChat({ user, text: ' masuk ke live chat', time: nowTime(), system: true });
   });
@@ -301,7 +340,7 @@ function publishChat(msg) {
   }
 }
 
-function appendChatMessage(msg) {
+function renderChatMessage(msg, countUnread) {
   const wrap = document.getElementById('chatMessages');
   const me = msg.user === getChatUser();
 
@@ -313,6 +352,7 @@ function appendChatMessage(msg) {
   } else {
     const div = document.createElement('div');
     div.className = 'chat-msg ' + (me ? 'me' : 'them');
+    if (msg.id) div.dataset.msgId = msg.id;
     div.innerHTML =
       '<span class="chat-user">' + escapeHtml(me ? 'Kamu' : msg.user) + '</span>' +
       '<span>' + escapeHtml(msg.text) + '</span>' +
@@ -322,10 +362,26 @@ function appendChatMessage(msg) {
 
   wrap.scrollTop = wrap.scrollHeight;
 
-  if (!chatOpen) {
+  if (countUnread && !chatOpen) {
     unreadCount++;
     updateChatBadge();
   }
+}
+
+function appendChatMessage(msg) {
+  if (!msg || msg.system) {
+    renderChatMessage(msg, false);
+    return;
+  }
+
+  if (msg.id && document.querySelector('[data-msg-id="' + msg.id + '"]')) return;
+
+  if (!msg.ts) msg.ts = Date.now();
+
+  const history = loadChatHistory();
+  saveChatHistory(history.concat(msg));
+
+  renderChatMessage(msg, true);
 }
 
 function updateChatBadge() {
@@ -351,13 +407,25 @@ function sendChat() {
   const text = input.value.trim();
   if (!text) return;
 
-  const msg = { user: getChatUser(), text, time: nowTime(), system: false };
+  const msg = {
+    id: 'm' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
+    user: getChatUser(),
+    text,
+    time: nowTime(),
+    ts: Date.now(),
+    system: false
+  };
   publishChat(msg);
   appendChatMessage(msg);
   input.value = '';
 }
 
 initChat();
+
+setInterval(() => {
+  purgeExpiredChat();
+  renderChatHistory();
+}, 60 * 60 * 1000);
 
 
 let slideIndex = 0;
